@@ -5,29 +5,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Udacity ND001 - P5 Neighborhood Map</title>
 	<link rel="stylesheet" href="css/style.css">
-
-	<!-- Loads the Google Maps Web API. Should this be put here? -->
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIhltZjHEw9uhG6giB5634s2eUmA51Rds"></script>
- <script type="text/javascript">
-		function initialize() {
-			var mapOptions = {
-				center: { lat: -34.397, lng: 150.644},
-				zoom: 8
-			};
-			var map = new google.maps.Map(document.getElementById('map-canvas'),
-					mapOptions);
-		}
-		google.maps.event.addDomListener(window, 'load', initialize);
-	</script>
 </head>
 <body>
 
 	<!-- Container for the map element -->
 	<div id="map-canvas"></div>
 
-	<!-- Load scripts and libraries -->
+	<!-- Load scripts and libraries. First libraries and helpers, than the Google Maps API and lastly the app execution scripts. -->
 	<script type="text/javascript" src="js/libs/jquery-1.11.3.js"></script>
 	<script type="text/javascript" src="js/libs/knockout-3.3.0.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIhltZjHEw9uhG6giB5634s2eUmA51Rds"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 </body>
 </html>
