@@ -1,3 +1,6 @@
-* {
-	border: 1px solid red;
+/* Copied from https://developers.google.com/maps/documentation/javascript/tutorial, should set the map to fill the whole window*/
+html, body, #map-canvas {
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
