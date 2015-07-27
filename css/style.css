@@ -4,3 +4,29 @@ html, body, #map-canvas {
 	margin: 0;
 	padding: 0;
 }
+
+/*.control-outer {
+	background-color: #fff;
+	border: 2px solid #fff;
+	cursor: pointer;
+	margin-bottom: 22px;
+	text-align: center;
+}
+
+.control-inner {
+	color: rgb(25,25,25);
+	font-family: 'Roboto,Arial,sans-serif';
+	font-size: 16px;
+	line-height: 38px;
+	padding-left: 5px;
+	padding-right: 5px;
+}*/
+
+#markerList {
+	background-color: red;
+	position: absolute;
+	margin: 5px;
+	right: 0px;
+	top: 20px;
+	z-index: 0;
+}
