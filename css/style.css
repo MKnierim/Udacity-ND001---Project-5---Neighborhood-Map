@@ -1,5 +1,4 @@
-/* Copied from https://developers.google.com/maps/documentation/javascript/tutorial, should set the map to fill the whole window*/
-html, body, #map-canvas {
+html, body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -24,6 +23,12 @@ html, body, #map-canvas {
 	padding-right: 5px;
 }
 
+#map-canvas {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 #markerList {
 	background-color: red;
 	position: absolute;
@@ -34,5 +39,17 @@ html, body, #map-canvas {
 }
 
 #center-control {
-	margin: 20px 5px;
+	margin: 20px 5px 0;
+}
+
+#marker-list {
+	margin: 0 5px;
+}
+
+#test-list {
+	position: absolute;
+	top: 200px;
+	right: 0px;
+	margin: 5px;
+	z-index: 0;
 }

@@ -5,10 +5,11 @@ var viewModel = {
 			position: location,
 			// label: labels[labelIndex++ % labels.length],
 			map: map,
-			draggable: true
-			// title: "Yay!"
+			draggable: true,
+			title: "Yay!"
 		});
 
-		model.markerArray.push(marker);
+	// Add marker to observable array in model object
+	model.markerArray.push(marker);
 	}
 };
