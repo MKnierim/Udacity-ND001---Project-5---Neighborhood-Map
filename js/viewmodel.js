@@ -33,11 +33,31 @@ var viewModel = {
 	},
 
 	addMarker: function(location, map, title) {
+		// Specifies a custom designed icon for the map.
+		var greenIcon = {
+			url: 'imgs/icons/marker-green.png',
+			labelOrigin: new google.maps.Point(12, 12)
+		};
+
+		var orangeIcon = {
+			url: 'imgs/icons/marker-orange.png',
+			labelOrigin: new google.maps.Point(12, 12)
+		};
+
+		// Specifies a label designed to match the custom icon.
+		var customLabel = {
+			color: '#fff',
+			text: String(model.markerArray().length+1),
+			fontWeight: 'bold'
+		};
+
 		// Creates and adds a marker to the map
 		var marker = new google.maps.Marker({
 			position: location,
-			label: String(model.markerArray().length+1),
 			map: map,
+			label: customLabel,
+			icon: greenIcon,
+			// cursor: 'pointer', did not seem to work like this
 			draggable: true,
 			title: "#" + (model.markerArray().length+1) + " - " + title
 		});
@@ -49,10 +69,9 @@ var viewModel = {
 
 		// This event listener opens the info window on the marker when it is clicked.
 		google.maps.event.addListener(marker, 'click', function() {
-    	// Here should be a function that automatically closes all other info windows as to maintain clarity for the viewer.
-
-    	infoWindow.open(map,marker);
-  	});
+			marker.setIcon(orangeIcon);		// Change appearance of marker to show activation
+			infoWindow.open(map,marker);
+		});
 
 	// Add marker to observable array in model object.
 	model.markerArray.push(marker);
