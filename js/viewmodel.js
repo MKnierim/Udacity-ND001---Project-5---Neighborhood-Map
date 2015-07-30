@@ -15,40 +15,54 @@ var viewModel = {
 
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-		// Initialize a marker for testing purposes
-		viewModel.addMarker(karlsruhe, map);
+		// Initialize a marker for testing purposes.
+		viewModel.addMarker(karlsruhe, map, "Karlsruhe-Center");
 
-		// ----- Add event listeners
+		// ----- Add event listeners.
 		// This event listener calls addMarker() when the map is clicked.
 		google.maps.event.addListener(map, 'click', function(event) {
-			viewModel.addMarker(event.latLng, map);
+			viewModel.addMarker(event.latLng, map, "Untitled Marker");
 		});
 
 		// Setup the click event listeners: simply set the map to Karlsruhe
-		// 	google.maps.event.addDomListener(controlUI, 'click', function() {
-		// 		map.setCenter(karlsruhe);
-		// 	});
-
+		// Since the custom controls are not implemented as part of the map object but rather as independent overlays, the eventHandlers have to be called by regular JS or jQuery in this case.
+		var centerControl = $('#center-control .control-inner');
+		centerControl.click(function() {
+			map.setCenter(karlsruhe);
+		});
 	},
 
-	addMarker: function(location, map) {		// Adds a marker to the map.
+	addMarker: function(location, map, title) {
+		// Creates and adds a marker to the map
 		var marker = new google.maps.Marker({
 			position: location,
-			// label: labels[labelIndex++ % labels.length],
+			label: String(model.markerArray().length+1),
 			map: map,
 			draggable: true,
-			title: "Yay!"
+			title: "#" + (model.markerArray().length+1) + " - " + title
 		});
 
-	// Add marker to observable array in model object
+		// Creates an info window for the marker
+		var infoWindow = new google.maps.InfoWindow({
+			content: marker.title
+		});
+
+		// This event listener opens the info window on the marker when it is clicked.
+		google.maps.event.addListener(marker, 'click', function() {
+    	// Here should be a function that automatically closes all other info windows as to maintain clarity for the viewer.
+
+    	infoWindow.open(map,marker);
+  	});
+
+	// Add marker to observable array in model object.
 	model.markerArray.push(marker);
 	}
 };
 
-// Initialize the map after the DOM has finished loading
+// Initialize the map after the DOM has finished loading.
 $(function() {
 	viewModel.initializeMap();
 
-	// Activate Knockout bindings
+	// Activate Knockout bindings.
 	ko.applyBindings(model);
 });

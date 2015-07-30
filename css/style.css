@@ -18,9 +18,17 @@ html, body {
 	color: rgb(25,25,25);
 	font-family: Roboto, Arial, sans-serif;
 	font-size: 11px;
+	font-weight: bold;
 	/*line-height: 38px;*/
 	padding-left: 5px;
 	padding-right: 5px;
+}
+
+.control-list {
+	min-width: 100px;
+	margin-top: 5px;
+	border: 0;
+	overflow: scroll;
 }
 
 #map-canvas {
@@ -29,27 +37,21 @@ html, body {
 	padding: 0;
 }
 
-#markerList {
-	background-color: red;
+#center-control, #marker-list, #search-control {
 	position: absolute;
-	margin: 5px;
 	right: 0px;
-	top: 20px;
+	margin: 5px;
 	z-index: 0;
 }
 
 #center-control {
-	position: absolute;
-	top: 100px;
-	right: 0px;
-	margin: 5px;
-	z-index: 0;
+	top: 50px;
 }
 
 #marker-list {
-	position: absolute;
-	top: 200px;
-	right: 0px;
-	margin: 5px;
-	z-index: 0;
+	top: 100px;
+}
+
+#search-control {
+	top: 300px;
 }

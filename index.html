@@ -21,7 +21,17 @@
 	<div id="marker-list">
 		<div class="control-outer">
 			<form>
-				<select data-bind="options: markerArray, optionsText: 'title'" size="10" multiple="true"></select>
+				<label class="control-inner">Current Markers</label><br>
+				<select data-bind="options: markerArray, optionsText: 'title'" size="10" multiple="true" class="control-list"></select>
+			</form>
+		</div>
+	</div>
+
+	<div id="search-control">
+		<div class="control-outer">
+			<form>
+				<label class="control-inner">Search Markers</label><br>
+				<input type="text">
 			</form>
 		</div>
 	</div>
