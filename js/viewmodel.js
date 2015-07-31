@@ -12,8 +12,8 @@ var viewModel = {
 	initializeMap: function() {
 		// Create a new StyledMapType object, passing it the array of styles,
   	// as well as the name to be displayed on the map type control.
-	  var styledMap = new google.maps.StyledMapType(view.funMapStyle,
-	    {name: "Fun Style"});
+	  var styledMap = new google.maps.StyledMapType(view.udacityMapStyle,
+	    {name: "Udacity Style"});
 
 		var mapOptions = {
 			center: karlsruhe,
@@ -21,16 +21,15 @@ var viewModel = {
 			disableDefaultUI: true,
 			mapTypeControl: true,
 			mapTypeControlOptions: {
-      	mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID, 'fun_style']
-    	},
-    	mapTypeId: 'fun_style'
+      	mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID, 'udacity_style']
+    	}
 		};
 
 		// Create and add map to designated div.
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 		//Associate the styled map with the MapTypeId.
-	  map.mapTypes.set('fun_style', styledMap);
+	  map.mapTypes.set('udacity_style', styledMap);
 
 		// Initialize a marker for testing purposes.
 		viewModel.addMarker(karlsruhe, map, "Karlsruhe-Center");

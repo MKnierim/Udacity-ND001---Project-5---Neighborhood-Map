@@ -11,100 +11,107 @@ var view = {
 	},
 
 	// Create an array of styles for the fun map type. Created by using the offered wizard at: http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html
-  funMapStyle : [
+	udacityMapStyle : [
 	  {
-	    "featureType": "poi",
-	    "elementType": "geometry",
+	    "featureType": "administrative",
+	    "elementType": "labels.text.fill",
 	    "stylers": [
-	      { "color": "#9d4b76" }
+	      { "color": "#ffa700" }
 	    ]
 	  },{
-	    "featureType": "road",
-	    "elementType": "geometry",
+	    "featureType": "administrative",
+	    "elementType": "labels.text.stroke",
 	    "stylers": [
-	      { "color": "#fefefe" }
+	      { "color": "#FFFFFF" },
+	      { "visibility": "on" }
 	    ]
 	  },{
 	    "featureType": "landscape.man_made",
+	    "elementType": "geometry.fill",
 	    "stylers": [
-	      { "color": "#bc3895" }
+	      { "color": "#224761" }
 	    ]
 	  },{
 	    "featureType": "landscape.natural",
-	    "stylers": [
-	      { "color": "#ee79c8" },
-	      { "lightness": -67 }
-	    ]
-	  },{
-	    "featureType": "poi.business",
 	    "elementType": "geometry.fill",
 	    "stylers": [
-	      { "lightness": -48 },
-	      { "color": "#911f1e" }
+	      { "color": "#1d3b50" }
+	    ]
+	  },{
+	    "featureType": "water",
+	    "elementType": "geometry.fill",
+	    "stylers": [
+	      { "color": "#80c7da" }
+	    ]
+	  },{
+	    "featureType": "road.highway",
+	    "elementType": "geometry.fill",
+	    "stylers": [
+	      { "color": "#ffa700" }
+	    ]
+	  },{
+	    "featureType": "poi",
+	    "elementType": "geometry.fill",
+	    "stylers": [
+	      { "color": "#326488" }
+	    ]
+	  },{
+	    "featureType": "poi",
+	    "elementType": "labels.text.fill",
+	    "stylers": [
+	      { "color": "#FFFFFF" }
+	    ]
+	  },{
+	    "featureType": "poi",
+	    "elementType": "labels.text.stroke",
+	    "stylers": [
+	      { "color": "#1b394d" }
 	    ]
 	  },{
 	    "featureType": "poi.park",
 	    "elementType": "geometry.fill",
 	    "stylers": [
-	      { "color": "#93c50b" }
-	    ]
-	  },{
-	    "featureType": "transit.line",
-	    "stylers": [
-	      { "visibility": "on" },
-	      { "lightness": 61 }
-	    ]
-	  },{
-	    "featureType": "poi.school",
-	    "elementType": "geometry",
-	    "stylers": [
-	      { "color": "#f1cc23" }
+	      { "color": "#baff00" }
 	    ]
 	  },{
 	    "featureType": "poi.attraction",
-	    "elementType": "geometry",
+	    "elementType": "geometry.fill",
 	    "stylers": [
-	      { "visibility": "on" },
-	      { "color": "#93c50b" }
+	      { "color": "#ffa700" }
 	    ]
 	  },{
-	    "featureType": "poi.government",
+	    "featureType": "poi.business",
+	    "elementType": "geometry.fill",
 	    "stylers": [
-	      { "visibility": "off" }
+	      { "color": "#0e2637" }
 	    ]
 	  },{
-	    "featureType": "poi.place_of_worship",
+	    "featureType": "poi.school",
 	    "stylers": [
-	      { "visibility": "off" }
+	      { "color": "#f6ff00" }
 	    ]
 	  },{
 	    "featureType": "poi.sports_complex",
-	    "elementType": "geometry",
+	    "elementType": "geometry.fill",
 	    "stylers": [
-	      { "visibility": "on" },
-	      { "color": "#bb575b" }
+	      { "color": "#ffcc00" }
 	    ]
 	  },{
-	    "featureType": "poi.medical",
+	    "featureType": "road",
+	    "elementType": "labels.text.fill",
 	    "stylers": [
-	      { "visibility": "off" }
+	      { "color": "#102e42" }
 	    ]
 	  },{
-	    "featureType": "water",
-	    "stylers": [
-	      { "color": "#479fcd" }
-	    ]
-	  },{
-	    "elementType": "labels.text",
-	    "stylers": [
-	      { "visibility": "on" },
-	      { "color": "#ffffff" }
-	    ]
-	  },{
+	    "featureType": "road",
 	    "elementType": "labels.text.stroke",
 	    "stylers": [
-	      { "color": "#ee79c8" },
-	      { "lightness": -81 }
+	      { "color": "#FFFFFF" }
+	    ]
+	  },{
+	    "featureType": "transit",
+	    "stylers": [
+	      { "visibility": "off" }
 	    ]
 	  }
 	]
