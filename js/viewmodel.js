@@ -23,8 +23,8 @@ var viewModel = {
 	initializeMap: function() {
 		var mapOptions = {
 			center: karlsruhe,
-			zoom: 14
-			// disableDefaultUI: true
+			zoom: 14,
+			disableDefaultUI: true
 		};
 
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -38,11 +38,13 @@ var viewModel = {
 			viewModel.addMarker(event.latLng, map, "Untitled Marker");
 		});
 
-		// Setup the click event listeners: simply set the map to Karlsruhe
-		// Since the custom controls are not implemented as part of the map object but rather as independent overlays, the eventHandlers have to be called by regular JS or jQuery in this case.
-		var centerControl = $('#center-control .control-inner');
-		centerControl.click(function() {
-			map.setCenter(karlsruhe);
+		// Setup the click event listeners. Since the custom controls are not implemented as part of the map object but rather as independent overlays, the eventHandlers have to be called by regular JS or jQuery in this case.
+		
+		// Event handler for marker list clicking
+		$('#marker-list select').click(function(){
+			var selectedMarker = $( "#marker-list select option:selected" ).text(); // Get name of selected marker from list
+			console.log(selectedMarker);
+			// var catObject = octopus.getCat(selectedCat);
 		});
 	},
 
@@ -61,7 +63,6 @@ var viewModel = {
 			map: map,
 			icon: greenIcon,
 			label: customLabel,
-			// cursor: 'pointer', did not seem to work like this
 			draggable: true,
 			title: "#" + labelChar + " - " + title
 		});
@@ -79,6 +80,8 @@ var viewModel = {
 		// This event listener sets the marker to be displayed as inacive when the info window is closed manually
 		google.maps.event.addListener(infoWindow, 'closeclick', function() {
 			marker.setIcon(greenIcon);
+			model.activeMarker = null;
+			model.activeInfo = null;
 		});
 
 		// Add marker to observable array in model object and activate new marker.
