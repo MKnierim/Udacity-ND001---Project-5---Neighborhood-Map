@@ -21,9 +21,9 @@ Open index.html to get access to the portfolio. From there, links are provided t
 
 1. Open a browser and visit localhost:8080
 
-### ...
+### Features
+* Custom "Udacity"-style for the map.
 
 
 #### To Do
-* Create a custom "fun"-style for the map. See: https://developers.google.com/maps/documentation/javascript/styling
-* Add a layer displaying transit information. See: https://developers.google.com/maps/documentation/javascript/trafficlayer#transit_layer
+* ...

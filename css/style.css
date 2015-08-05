@@ -24,38 +24,107 @@ html, body {
 	padding-right: 5px;
 }
 
-.control-list {
-	min-width: 100px;
-	margin-top: 5px;
-	border: 0;
-	overflow: scroll;
-}
-
-.gmnoprint {
-	color: #fff;
-}
-
 #map-canvas {
 	height: 100%;
 	margin: 0;
 	padding: 0;
 }
 
-#center-control, #marker-list, #search-control {
+#custom-control {
 	position: absolute;
 	right: 0px;
+	top: 50px;
 	margin: 5px;
 	z-index: 0;
 }
 
-#center-control {
-	top: 50px;
+#searchbar {
+	border: none;
+	outline: none;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 #marker-list {
-	top: 100px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 5px;
+	min-width: 200px;
+	text-align: left;
+	list-style: none;
 }
 
-#search-control {
-	top: 300px;
+#marker-list li {
+	position: relative;
+	font-size: 12px;
+	border-bottom: 1px dotted #ccc;
+}
+
+#marker-list li:last-child {
+	border-bottom: none;
+}
+
+#marker-list li.editing {
+	border-bottom: none;
+	padding: 0;
+}
+
+#marker-list li.editing .edit {
+	display: block;
+	width: 100%;
+/*	padding: 13px 17px 12px 17px;*/
+}
+
+#marker-list li.editing .view {
+	display: none;
+}
+
+#marker-list li .del-btn,
+#marker-list li .edit-btn {
+	/*display: none;*/
+	/*top: 0;*/
+	/*bottom: 0;*/
+	/*margin: auto 0;*/
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	font-size: 11px;
+	color: #a88a8a;
+	border: none;
+	background-color: #fff;
+}
+
+#marker-list li .del-btn {
+	right: 0px;
+}
+
+#marker-list li .edit-btn {
+	right: 20px;
+}
+
+#marker-list li .del-btn:hover,
+#marker-list li .edit-btn:hover {
+	text-shadow: 0 0 1px #000,
+				 0 0 10px rgba(199, 107, 107, 0.8);
+}
+
+#marker-list li .del-btn:after {
+	content: '✖';
+}
+
+#marker-list li .edit-btn:after {
+	content: '✎';
+}
+
+#marker-list li:hover .del-btn,
+#marker-list li:hover .edit-btn {
+	display: block;
+}
+
+#marker-list li .edit {
+	display: none;
+}
+
+#marker-list li.editing:last-child {
+	margin-bottom: -1px;
 }

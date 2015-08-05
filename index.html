@@ -12,21 +12,26 @@
 	<div id="map-canvas"></div>
 
 	<!-- Custom controls -->
-	<div id="marker-list">
+	<div id="custom-control">
 		<div class="control-outer">
-			<form>
-				<label class="control-inner">Current Markers</label><br>
-				<select data-bind="options: markerArray, optionsText: 'title'" size="10" multiple="true" class="control-list"></select>
-			</form>
-		</div>
-	</div>
+		<h3 class="control-inner">Marker List</h3>
 
-	<div id="search-control">
-		<div class="control-outer">
-			<form>
-				<label class="control-inner">Search Markers</label><br>
-				<input type="text">
-			</form>
+			<!-- Control to search/filter existing markers -->
+			<input id="searchbar" placeholder="Filter markers"> <!-- data-bind="value: current, valueUpdate: 'afterkeydown', enterKey: add"> -->
+			<hr>
+
+			<!-- Control to list and edit displayed markers -->
+			<ul id="marker-list" data-bind="foreach: markerArray">
+				<li data-bind="css: { editing: editing }">		<!-- Here I could add a visualization that a marker is active. something like active: active -->
+					<div class="view">
+						<span data-bind="text: mObject.label.text"></span> - <span data-bind="text: title"></span>
+						<button class="edit-btn" data-bind="click: viewModel.editMarker"></button>
+						<button class="del-btn" data-bind="click: viewModel.deleteMarker"></button>
+					</div>
+					<input class="edit" data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: viewModel.saveEditing, escapeKey: viewModel.cancelEditing, selectAndFocus: editing">
+				</li>
+			</ul>
+
 		</div>
 	</div>
 
