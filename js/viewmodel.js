@@ -12,6 +12,13 @@ var labelIndex = 0;
 var ENTER_KEY = 13;
 var ESCAPE_KEY = 27;
 
+// API variables
+var foursquareApi = 'https://api.foursquare.com/v2/venues/search?client_id=' +
+		'3P0CNNUW5YA1QIJAQUVRR0H4UI4FVASXURVLXGP4AOMAHXIM&client_secret=' +
+		'NJFWJLYRXMAHO2W2F1SIGOTA5LMHMSUTGLM2XBRAXV5YMUBM&v=20150401';
+var googleStreetview = 'https://maps.googleapis.com/maps/api/streetview?size=' +
+		'300x150&location=';
+
 // A factory function to create binding handlers for specific keycodes.
 function keyhandlerBindingFactory(keyCode) {
 	return {
@@ -82,32 +89,35 @@ var ViewModel = function () {
 	self.activeMarker = null;		// Should I make this an observable?
 
 	// Stores a string which is used to filter markers in the list.
-	self.searchFilter = ko.observable();
+	self.searchFilter = ko.observable('');
 
+	// This function checks to see if there is anything to be filtered.
+	// If there's nothing to be filtered, display the entire item list and all the markers.
 	self.filteredMarkers = ko.computed(function () {
-		return self.markerArray();
-	}, self);
+		// Convert search string to lower case to bypass case-sensitive matching.
+		var filter = self.searchFilter().toLowerCase();
 
-	/**
-   * Function that uses Knockout's arrayFilter utility function to pass in the
-   * placeList array and control which items are filtered based on the result
-   * of the function -- executed on each placeList item -- that returns those
-   * items who's name matches the search input.
-   * http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
-   */
-  // self.filteredMarkers = function(filter) {
-  //     return ko.utils.arrayFilter(self.locations(), function(location) {
-  //         return location.name.toLowerCase().indexOf(filter) !== -1;
-  //     });
-  // };
+		// Use Knockout's arrayFilter utility function to pass in the markerArray and
+		// control which items are filtered based on a match of the search string and the
+		// marker title. For additional information see:
+		// http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+		if (!filter) {
+			return self.markerArray();
+		}
+		else {
+			return ko.utils.arrayFilter(self.markerArray(), function(marker) {
+	        return marker.mObject.title.toLowerCase().indexOf(filter) !== -1;
+	    });
+		};
+	}, self);
 
 
 	// Function to intialize the map at the beginning.
 	self.initializeMap = function() {
 		// Create a new StyledMapType object, passing it the array of styles,
-  	// as well as the name to be displayed on the map type control.
-	  var styledMap = new google.maps.StyledMapType(view.udacityMapStyle,
-	    {name: "Udacity Style"});
+		// as well as the name to be displayed on the map type control.
+		var styledMap = new google.maps.StyledMapType(view.udacityMapStyle,
+			{name: "Udacity Style"});
 
 		var mapOptions = {
 			center: KARLSRUHE,
@@ -115,15 +125,15 @@ var ViewModel = function () {
 			disableDefaultUI: true,
 			mapTypeControl: true,
 			mapTypeControlOptions: {
-      	mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID, 'udacity_style']
-    	}
+				mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID, 'udacity_style']
+			}
 		};
 
 		// Create and add map to designated div.
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 		//Associate the styled map with the MapTypeId.
-	  map.mapTypes.set('udacity_style', styledMap);
+		map.mapTypes.set('udacity_style', styledMap);
 
 		// Initialize a marker for testing purposes.
 		self.addMarker(KARLSRUHE, map, "Karlsruhe-Center");
@@ -236,6 +246,41 @@ var ViewModel = function () {
 		marker.title(marker.previousTitle);
 	};
 
+	// self.apiRequest = function(marker) {
+	// 	var lat = marker.position.lat();
+	// 	var lng = marker.position.lng();
+
+	// 	return 'latitude' + lat + '& longitude: ' + lng;
+	// 	// var $windowContent = $('#content');
+
+	// 	// var url = foursquareApi + '&ll=' + lat + ',' + lng + '&query=\'' +
+	// 	// 		marker.title + '\'&limit=1';
+
+	// 	// $.getJSON(url, function(response) {
+	// 	// 		var venue = response.response.venues[0];
+	// 	// 		var venuePhone = venue.contact.formattedPhone;
+	// 	// 		var venueAddress = venue.location.formattedAddress;
+	// 	// 		var venueStreet = venue.location.address;
+	// 	// 		var venueCity = venue.location.city;
+	// 	// 		var venueCountry = venue.location.country;
+	// 	// 		var venueLocation = venueStreet + venueCity + venueCountry;
+	// 	// 		var streetPhotoUrl = googleStreetview + venueLocation;
+
+	// 	// 		// Handles undefined error if phone number cannot be found
+	// 	// 		if (venuePhone === undefined) {
+	// 	// 				venuePhone = '<i>Could not find phone number for this location<i>';
+	// 	// 		} else {
+	// 	// 				venuePhone = venuePhone;
+	// 	// 		}
+
+	// 	// 		$windowContent.append('<p>' + venuePhone + '</p>');
+	// 	// 		$windowContent.append('<p>' + venueAddress + '</p>');
+	// 	// 		$windowContent.append('<img class="street-img" src="' + streetPhotoUrl +
+	// 	// 				'">');
+	// 	// }).error(function(err) {
+	// 	// 		$windowContent.text('No information can be retrieved at this time.');
+	// 	// });
+	// };
 };
 
 // Initialize the map after the DOM has finished loading.

@@ -18,7 +18,7 @@
 				<h3>Marker List</h3>
 
 				<!-- Control to search/filter existing markers -->
-				<input id="searchbar" placeholder="Filter markers">
+				<input id="searchbar" placeholder="Filter markers" data-bind="value: searchFilter, valueUpdate: 'keyup'">
 
 				<!-- Control to list and edit displayed markers -->
 				<ul id="marker-list" data-bind="foreach: filteredMarkers">
