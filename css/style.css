@@ -4,12 +4,15 @@ html, body {
 	padding: 0;
 }
 
+h3 {
+	margin: 10px auto;
+}
+
 .control-outer {
 	background-color: #fff;
 	border: 2px solid #fff;
 	border-radius: 3px;
 	box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	margin-bottom: 22px;
 	text-align: center;
 }
 
@@ -17,7 +20,6 @@ html, body {
 	color: rgb(25,25,25);
 	font-family: Roboto, Arial, sans-serif;
 	font-size: 11px;
-	/*line-height: 38px;*/
 	padding-left: 5px;
 	padding-right: 5px;
 }
@@ -46,7 +48,7 @@ html, body {
 	padding-left: 5px;
 	padding-right: 5px;
 	margin-top: 5px;
-	width: 100%;
+	width: inherit;
 	text-align: left;
 	list-style: none;
 }
@@ -87,7 +89,7 @@ html, body {
 	/*display: none;*/
 	top: 0;
 	bottom: 0;
-	margin: auto 0;
+	margin: auto;
 	position: absolute;
 	width: 20px;
 	height: 20px;

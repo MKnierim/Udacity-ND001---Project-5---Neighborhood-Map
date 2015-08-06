@@ -9,6 +9,16 @@ var view = {
 		return htmlstring;
 	},
 
+	customLabel : function(labelChar) {
+		var labelObject = {
+			color: '#fff',
+			text: labelChar,
+			fontWeight: 'bold'
+		};
+
+		return labelObject;
+	},
+
 	// Specifies a custom designed icon for the map.
 	greenIcon : {
 		url: 'imgs/icons/marker-green.png',
