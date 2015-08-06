@@ -9,7 +9,6 @@ html, body {
 	border: 2px solid #fff;
 	border-radius: 3px;
 	box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	cursor: pointer;
 	margin-bottom: 22px;
 	text-align: center;
 }
@@ -18,7 +17,6 @@ html, body {
 	color: rgb(25,25,25);
 	font-family: Roboto, Arial, sans-serif;
 	font-size: 11px;
-	font-weight: bold;
 	/*line-height: 38px;*/
 	padding-left: 5px;
 	padding-right: 5px;
@@ -36,20 +34,19 @@ html, body {
 	top: 50px;
 	margin: 5px;
 	z-index: 0;
+	min-width: 200px;
 }
 
 #searchbar {
-	border: none;
+	width: 100%;
 	outline: none;
-	padding-left: 5px;
-	padding-right: 5px;
 }
 
 #marker-list {
 	padding-left: 5px;
 	padding-right: 5px;
 	margin-top: 5px;
-	min-width: 200px;
+	width: 100%;
 	text-align: left;
 	list-style: none;
 }
@@ -58,10 +55,16 @@ html, body {
 	position: relative;
 	font-size: 12px;
 	border-bottom: 1px dotted #ccc;
+	line-height: 24px;
+	font-weight: normal;
 }
 
 #marker-list li:last-child {
 	border-bottom: none;
+}
+
+#marker-list li div.active {
+	font-weight: bold;
 }
 
 #marker-list li.editing {
@@ -82,14 +85,14 @@ html, body {
 #marker-list li .del-btn,
 #marker-list li .edit-btn {
 	/*display: none;*/
-	/*top: 0;*/
-	/*bottom: 0;*/
-	/*margin: auto 0;*/
+	top: 0;
+	bottom: 0;
+	margin: auto 0;
 	position: absolute;
 	width: 20px;
 	height: 20px;
 	font-size: 11px;
-	color: #a88a8a;
+	color: #e3840b;
 	border: none;
 	background-color: #fff;
 }
@@ -116,9 +119,14 @@ html, body {
 	content: '✎';
 }
 
+#marker-list li:hover {
+	cursor: pointer;
+	font-weight: bold;
+}
+
 #marker-list li:hover .del-btn,
 #marker-list li:hover .edit-btn {
-	display: block;
+	/*display: block;*/
 }
 
 #marker-list li .edit {

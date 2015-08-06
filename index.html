@@ -14,23 +14,27 @@
 	<!-- Custom controls -->
 	<div id="custom-control">
 		<div class="control-outer">
-		<h3 class="control-inner">Marker List</h3>
+			<div class="control-inner">
+				<h3>Marker List</h3>
 
-			<!-- Control to search/filter existing markers -->
-			<input id="searchbar" placeholder="Filter markers"> <!-- data-bind="value: current, valueUpdate: 'afterkeydown', enterKey: add"> -->
-			<hr>
+				<!-- Control to search/filter existing markers -->
+				<input id="searchbar" placeholder="Filter markers">
+				<hr>
 
-			<!-- Control to list and edit displayed markers -->
-			<ul id="marker-list" data-bind="foreach: markerArray">
-				<li data-bind="css: { editing: editing }">		<!-- Here I could add a visualization that a marker is active. something like active: active -->
-					<div class="view">
-						<span data-bind="text: mObject.label.text"></span> - <span data-bind="text: title"></span>
-						<button class="edit-btn" data-bind="click: viewModel.editMarker"></button>
-						<button class="del-btn" data-bind="click: viewModel.deleteMarker"></button>
-					</div>
-					<input class="edit" data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: viewModel.saveEditing, escapeKey: viewModel.cancelEditing, selectAndFocus: editing">
-				</li>
-			</ul>
+				<!-- Control to list and edit displayed markers -->
+				<ul id="marker-list" data-bind="foreach: markerArray">
+					<li data-bind="css: { editing: editing }">
+						<div class="view">
+							<div id="marker-title" data-bind="click: viewModel.updateActiveMarker, css: { active: active }">
+								<span data-bind="text: mObject.label.text"></span> - <span data-bind="text: title"></span>
+							</div>
+							<button class="edit-btn" data-bind="click: viewModel.editMarker"></button>
+							<button class="del-btn" data-bind="click: viewModel.deleteMarker"></button>
+						</div>
+						<input class="edit" data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: viewModel.saveEditing, escapeKey: viewModel.cancelEditing, selectAndFocus: editing">
+					</li>
+				</ul>
+			</div>
 
 		</div>
 	</div>

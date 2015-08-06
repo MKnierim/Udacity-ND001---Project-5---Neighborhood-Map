@@ -136,23 +136,22 @@ var viewModel = {
 
 		// This event listener opens the info window on the marker when it is clicked.
 		google.maps.event.addListener(marker, 'click', function() {
-			viewModel.updateActiveMarker(marker, infoWindow);
+			viewModel.updateActiveMarker(myMarker);
 		});
 
 		// This event listener sets the marker to be displayed as inacive when the info window is closed manually
 		google.maps.event.addListener(infoWindow, 'closeclick', function() {
-			marker.setIcon(view.greenIcon);
+			myMarker.mObject.setIcon(view.greenIcon);
+			myMarker.active(false);
 			model.activeMarker = null;
-			model.activeInfo = null;
 		});
 
 		// Activate new marker.
-		this.updateActiveMarker(marker, infoWindow);
+		this.updateActiveMarker(myMarker);
 	},
 
 	// Edit the title of a marker
 	editMarker: function(marker) {
-		console.log("This marker shall be edited: " + marker.title());
 		marker.editing(true);
 		marker.previousTitle = marker.title();
 	},
@@ -193,18 +192,18 @@ var viewModel = {
 		marker.mObject = null;
 	},
 
-	updateActiveMarker: function(marker, infoWindow) {
+	updateActiveMarker: function(marker) {
 		if (model.activeMarker != null && model.activeMarker != marker) {
 			// If there is actually a new marker that should be activated change icon and close info window on a previously active marker.
-			model.activeInfo.close();
-			model.activeMarker.setIcon(view.greenIcon);
-		};
-
+			model.activeMarker.iWObject.close();
+			model.activeMarker.mObject.setIcon(view.greenIcon);
+			model.activeMarker.active(false);
+		}
 		// Set and activate the new marker
+		marker.active(true);
 		model.activeMarker = marker;
-		model.activeInfo = infoWindow;
-		model.activeMarker.setIcon(view.orangeIcon);
-		infoWindow.open(map,model.activeMarker);
+		model.activeMarker.mObject.setIcon(view.orangeIcon);
+		model.activeMarker.iWObject.open(map,model.activeMarker.mObject);
 	}
 };
 

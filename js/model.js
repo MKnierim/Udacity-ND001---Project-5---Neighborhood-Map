@@ -8,9 +8,8 @@ var model = {
 		this.iWObject = infoWindowObject;
 		this.title = ko.observable(markerObject.title);
 		this.editing = ko.observable(false);
+		this.active = ko.observable(false);
 	},
 
 	activeMarker: null,		// Stores an object of type marker which is currently being focused.
-
-	activeInfo: null		// Stores an object of type infoWindo which belongs to the marker which is currently being focused.
 };
