@@ -1,8 +1,15 @@
 // Code for the apps ViewModel (Part of knockout.js MVVM pattern for the separation of concerns)
 
-// Global variables
+// Global variables.
 var map;
+
+// Marker constants for the initialization of the map.
 var KARLSRUHE = new google.maps.LatLng(49.006616, 8.403354);
+var DEFAULTMARKERS = [
+	{title: "Karlsruhe Palace", latitude: 49.015677, longitude: 8.402064},
+	{title: "Field Hockey Club KTV", latitude: 49.026714, longitude: 8.408566},
+	{title: "Karlsruhe Institute of Technology", latitude: 49.011511, longitude: 8.415958}
+];
 
 // Constants and variables for the labels of map markers.
 var LABELCHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -135,8 +142,10 @@ var ViewModel = function () {
 		//Associate the styled map with the MapTypeId.
 		map.mapTypes.set('udacity_style', styledMap);
 
-		// Initialize a marker for testing purposes.
-		self.addMarker(KARLSRUHE, map, "Karlsruhe-Center");
+		// Initialize default markers.
+		for (var i=0; i < DEFAULTMARKERS.length; i++){
+			self.addMarker(new google.maps.LatLng(DEFAULTMARKERS[i].latitude, DEFAULTMARKERS[i].longitude), map, DEFAULTMARKERS[i].title);
+		};
 
 		// This event listener calls addMarker() when the map is clicked.
 		google.maps.event.addListener(map, 'click', function(event) {
