@@ -73,21 +73,37 @@ var MyMarker = function (markerObject, infoWindowObject) {
 // The main view model
 var ViewModel = function () {
 
+	var self = this;
+
 	// Observable Array to store all marker objects and automatically update the view on changes.
-	this.markerArray = ko.observableArray();
+	self.markerArray = ko.observableArray();
 
 	// Stores an object of type marker which is currently being focused.
-	this.activeMarker = null;		// Should I make this an observable?
+	self.activeMarker = null;		// Should I make this an observable?
 
 	// Stores a string which is used to filter markers in the list.
-	this.searchFilter = ko.observable();
+	self.searchFilter = ko.observable();
 
-	this.filteredMarkers = ko.computed(function () {
-		return this.markerArray();
-	}.bind(this));
+	self.filteredMarkers = ko.computed(function () {
+		return self.markerArray();
+	}, self);
+
+	/**
+   * Function that uses Knockout's arrayFilter utility function to pass in the
+   * placeList array and control which items are filtered based on the result
+   * of the function -- executed on each placeList item -- that returns those
+   * items who's name matches the search input.
+   * http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+   */
+  // self.filteredMarkers = function(filter) {
+  //     return ko.utils.arrayFilter(self.locations(), function(location) {
+  //         return location.name.toLowerCase().indexOf(filter) !== -1;
+  //     });
+  // };
+
 
 	// Function to intialize the map at the beginning.
-	this.initializeMap = function() {
+	self.initializeMap = function() {
 		// Create a new StyledMapType object, passing it the array of styles,
   	// as well as the name to be displayed on the map type control.
 	  var styledMap = new google.maps.StyledMapType(view.udacityMapStyle,
@@ -110,25 +126,15 @@ var ViewModel = function () {
 	  map.mapTypes.set('udacity_style', styledMap);
 
 		// Initialize a marker for testing purposes.
-		this.addMarker(KARLSRUHE, map, "Karlsruhe-Center");
+		self.addMarker(KARLSRUHE, map, "Karlsruhe-Center");
 
-		// ----- Add event listeners.
 		// This event listener calls addMarker() when the map is clicked.
 		google.maps.event.addListener(map, 'click', function(event) {
-			viewModel.addMarker(event.latLng, map, "Untitled Marker");
+			self.addMarker(event.latLng, map, "Untitled Marker");
 		});
+	};
 
-		// Setup the click event listeners. Since the custom controls are not implemented as part of the map object but rather as independent overlays, the eventHandlers have to be called by regular JS or jQuery in this case.
-
-		// Event handler for marker list clicking
-		// $('#marker-list').click(function(){
-		// 	var selectedMarker = $( "#marker-list option:selected" ).text(); // Get name of selected marker from list
-		// 	console.log(selectedMarker);
-		// 	// var catObject = octopus.getCat(selectedCat);
-		// });
-	}.bind(this);
-
-	this.addMarker = function(location, map, title) {
+	self.addMarker = function(location, map, title) {
 		// Evaluate the next label character.
 		var labelChar = LABELCHARS[labelIndex++ % LABELCHARS.length];
 
@@ -150,53 +156,60 @@ var ViewModel = function () {
 		var myMarker = new MyMarker(marker, infoWindow);
 
 		// Add marker to observable array
-		this.markerArray.push(myMarker);
+		self.markerArray.push(myMarker);
 
 		// This event listener opens the info window on the marker when it is clicked.
 		google.maps.event.addListener(marker, 'click', function() {
-			viewModel.updateActiveMarker(myMarker);
+			self.updateActiveMarker(myMarker);
 		});
 
 		// This event listener sets the marker to be displayed as inactive when the info window is closed manually.
 		google.maps.event.addListener(infoWindow, 'closeclick', function() {
 			myMarker.mObject.setIcon(view.greenIcon);
 			myMarker.active(false);
-			viewModel.activeMarker = null;
+			self.activeMarker = null;
 		});
 
 		// Activate new marker.
-		this.updateActiveMarker(myMarker);
-	}.bind(this);
+		self.updateActiveMarker(myMarker);
+	};
 
 	// Delete marker by removing it from the array and also removing it from the map.
-	this.deleteMarker = function(marker) {
-		marker.mObject.setMap(null);
-		this.markerArray.remove(marker);		// Maybe I need to switch "this" to "viewModel" here.
-		marker.mObject = null;
-	}.bind(this);
+	self.deleteMarker = function(marker) {
+		// Check if marker was the last one in the line and if so set the labelCount back so
+		// the next new marker will have the next following character again.
+		if (LABELCHARS.indexOf(marker.mObject.label.text) == labelIndex - 1) {
+			labelIndex--;
+		};
 
-	this.updateActiveMarker = function(marker) {
-		if (this.activeMarker != null && this.activeMarker != marker) {
+		self.activeMarker = null;
+		marker.mObject.setMap(null);
+		self.markerArray.remove(marker);
+		marker.mObject = null;
+	};
+
+	self.updateActiveMarker = function(marker) {
+		if (self.activeMarker != null && self.activeMarker != marker) {
 			// If there is actually a new marker that should be activated change icon and close info window on a previously active marker.
-			this.activeMarker.iWObject.close();
-			this.activeMarker.mObject.setIcon(view.greenIcon);
-			this.activeMarker.active(false);
+			self.activeMarker.iWObject.close();
+			self.activeMarker.mObject.setIcon(view.greenIcon);
+			self.activeMarker.active(false);
 		}
 		// Set and activate the new marker.
 		marker.active(true);
-		this.activeMarker = marker;
-		this.activeMarker.mObject.setIcon(view.orangeIcon);
-		this.activeMarker.iWObject.open(map,this.activeMarker.mObject);
-	}.bind(this);
+		self.activeMarker = marker;
+		self.activeMarker.mObject.setIcon(view.orangeIcon);
+		self.activeMarker.iWObject.open(map,self.activeMarker.mObject);
+	};
 
 	// Edit the title of a marker.
-	this.editMarker = function(marker) {
+	self.editMarker = function(marker) {
 		marker.editing(true);
 		marker.previousTitle = marker.title();
-	}.bind(this);
+	};
 
 	// Stop editing an item and save the new title. If the title is empty set it to "Untitled Marker".
-	this.saveEditing = function(marker) {
+	self.saveEditing = function(marker) {
 		marker.editing(false);
 
 		var title = marker.title();
@@ -215,13 +228,13 @@ var ViewModel = function () {
 		// In the end, change the title on the GoogleMaps Marker Object manually.
 		marker.mObject.setTitle(marker.title());
 		marker.iWObject.setContent(view.infoWindowTemplate(marker.title()));
-	}.bind(this);
+	};
 
 	// Cancel editing an item and revert to the previous content.
-	this.cancelEditing = function(marker) {
+	self.cancelEditing = function(marker) {
 		marker.editing(false);
 		marker.title(marker.previousTitle);
-	}.bind(this);
+	};
 
 };
 

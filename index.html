@@ -21,7 +21,7 @@
 				<input id="searchbar" placeholder="Filter markers">
 
 				<!-- Control to list and edit displayed markers -->
-				<ul id="marker-list" data-bind="foreach: markerArray">
+				<ul id="marker-list" data-bind="foreach: filteredMarkers">
 					<li data-bind="css: { editing: editing }">
 						<div class="view">
 							<div id="marker-title" data-bind="click: $root.updateActiveMarker, css: { active: active }">
@@ -43,7 +43,7 @@
 	<script type="text/javascript" src="js/libs/knockout-3.3.0.js"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIhltZjHEw9uhG6giB5634s2eUmA51Rds"></script>
 
-	<script type="text/javascript" src="js/viewmodel.js"></script>
 	<script type="text/javascript" src="js/view.js"></script>
+	<script type="text/javascript" src="js/viewmodel.js"></script>
 </body>
 </html>
