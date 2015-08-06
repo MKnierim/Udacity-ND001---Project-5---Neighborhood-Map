@@ -13,11 +13,11 @@ var ENTER_KEY = 13;
 var ESCAPE_KEY = 27;
 
 // API variables
-var foursquareApi = 'https://api.foursquare.com/v2/venues/search?client_id=' +
-		'3P0CNNUW5YA1QIJAQUVRR0H4UI4FVASXURVLXGP4AOMAHXIM&client_secret=' +
-		'NJFWJLYRXMAHO2W2F1SIGOTA5LMHMSUTGLM2XBRAXV5YMUBM&v=20150401';
-var googleStreetview = 'https://maps.googleapis.com/maps/api/streetview?size=' +
-		'300x150&location=';
+// var foursquareApi = 'https://api.foursquare.com/v2/venues/search?client_id=' +
+// 		'3P0CNNUW5YA1QIJAQUVRR0H4UI4FVASXURVLXGP4AOMAHXIM&client_secret=' +
+// 		'NJFWJLYRXMAHO2W2F1SIGOTA5LMHMSUTGLM2XBRAXV5YMUBM&v=20150401';
+// var googleStreetview = 'https://maps.googleapis.com/maps/api/streetview?size=' +
+// 		'300x150&location=';
 
 // A factory function to create binding handlers for specific keycodes.
 function keyhandlerBindingFactory(keyCode) {
@@ -192,19 +192,26 @@ var ViewModel = function () {
 			labelIndex--;
 		};
 
-		self.activeMarker = null;
+		// Check if the marker to delete is the currently active marker and if so set the activeMarker to null.
+		if (self.activeMarker == marker) {
+			self.activeMarker = null;
+		};
+
+		// Then delete the chosen marker.
 		marker.mObject.setMap(null);
 		self.markerArray.remove(marker);
 		marker.mObject = null;
 	};
 
 	self.updateActiveMarker = function(marker) {
+		// Check if there is currently a marker active and deactivate it.
 		if (self.activeMarker != null && self.activeMarker != marker) {
-			// If there is actually a new marker that should be activated change icon and close info window on a previously active marker.
 			self.activeMarker.iWObject.close();
 			self.activeMarker.mObject.setIcon(view.greenIcon);
 			self.activeMarker.active(false);
-		}
+			self.activeMarker = null;
+		};
+
 		// Set and activate the new marker.
 		marker.active(true);
 		self.activeMarker = marker;
