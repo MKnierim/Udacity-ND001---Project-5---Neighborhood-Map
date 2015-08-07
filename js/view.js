@@ -9,11 +9,10 @@ var view = {
 		return htmlstring;
 	},
 
-	// Specifies design for custom label and returns the object.
-	customLabel : function(labelText) {
+	customLabel : function(labelChar) {
 		var labelObject = {
 			color: '#fff',
-			text: labelText,
+			text: labelChar,
 			fontWeight: 'bold'
 		};
 		return labelObject;

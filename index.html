@@ -18,20 +18,19 @@
 				<h3>Marker List</h3>
 
 				<!-- Control to search/filter existing markers -->
-				<input id="searchbar" placeholder="Filter markers">
-				<hr>
+				<input id="searchbar" placeholder="Filter markers" data-bind="value: searchFilter, valueUpdate: 'keyup'">
 
 				<!-- Control to list and edit displayed markers -->
 				<ul id="marker-list" data-bind="foreach: filteredMarkers">
 					<li data-bind="css: { editing: editing }">
 						<div class="view">
-							<div id="marker-title" data-bind="click: viewModel.updateActiveMarker, css: { active: active }">
+							<div id="marker-title" data-bind="click: $root.updateActiveMarker, css: { active: active }">
 								<span data-bind="text: mObject.label.text"></span> - <span data-bind="text: title"></span>
 							</div>
-							<button class="edit-btn" data-bind="click: viewModel.editMarker"></button>
-							<button class="del-btn" data-bind="click: viewModel.deleteMarker"></button>
+							<button class="edit-btn" data-bind="click: $root.editMarker"></button>
+							<button class="del-btn" data-bind="click: $root.deleteMarker"></button>
 						</div>
-						<input class="edit" data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: viewModel.saveEditing, escapeKey: viewModel.cancelEditing, selectAndFocus: editing">
+						<input class="edit" data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: $root.saveEditing, escapeKey: $root.cancelEditing, selectAndFocus: editing">
 					</li>
 				</ul>
 			</div>
@@ -44,8 +43,7 @@
 	<script type="text/javascript" src="js/libs/knockout-3.3.0.js"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIhltZjHEw9uhG6giB5634s2eUmA51Rds"></script>
 
-	<script type="text/javascript" src="js/model.js"></script>
-	<script type="text/javascript" src="js/viewmodel.js"></script>
 	<script type="text/javascript" src="js/view.js"></script>
+	<script type="text/javascript" src="js/viewmodel.js"></script>
 </body>
 </html>
