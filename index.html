@@ -22,7 +22,7 @@
 				<hr>
 
 				<!-- Control to list and edit displayed markers -->
-				<ul id="marker-list" data-bind="foreach: markerArray">
+				<ul id="marker-list" data-bind="foreach: filteredMarkers">
 					<li data-bind="css: { editing: editing }">
 						<div class="view">
 							<div id="marker-title" data-bind="click: viewModel.updateActiveMarker, css: { active: active }">

@@ -1,5 +1,5 @@
 var view = {
-	// Specifies a template for marker Info Windows
+	// Specifies a template for marker Info Windows.
 	infoWindowTemplate : function(title) {
 		var htmlstring = '<div>' +
 			'<h3>' + title + '</h3>' +
@@ -7,6 +7,16 @@ var view = {
 			'<div><small>Additional content...</small></div>' +
 			'</div>';
 		return htmlstring;
+	},
+
+	// Specifies design for custom label and returns the object.
+	customLabel : function(labelText) {
+		var labelObject = {
+			color: '#fff',
+			text: labelText,
+			fontWeight: 'bold'
+		};
+		return labelObject;
 	},
 
 	// Specifies a custom designed icon for the map.

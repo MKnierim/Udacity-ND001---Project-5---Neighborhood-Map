@@ -4,7 +4,7 @@
 var map;
 var KARLSRUHE = new google.maps.LatLng(49.006616, 8.403354);
 
-var labelChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+var LABELCHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 var labelIndex = 0;
 
 // Constants for certain keyboard operations
@@ -105,21 +105,14 @@ var viewModel = {
 	},
 
 	addMarker: function(location, map, title) {
-		var labelChar = labelChars[labelIndex++ % labelChars.length];
-
-		// Maybe I should move this to view.js? There was a problem with the labelChar, so this needs to be checked if I chose to refactor.
-		var customLabel = {
-			color: '#fff',
-			text: labelChar,
-			fontWeight: 'bold'
-		};
+		var labelChar = LABELCHARS[labelIndex++ % LABELCHARS.length];
 
 		// Creates and adds a marker to the map
 		var marker = new google.maps.Marker({
 			position: location,
 			map: map,
 			icon: view.greenIcon,
-			label: customLabel,
+			label: view.customLabel(labelChar),
 			title: title
 		});
 
@@ -150,6 +143,34 @@ var viewModel = {
 		this.updateActiveMarker(myMarker);
 	},
 
+	// Delete marker by removing it from the array and also removing it from the map.
+	deleteMarker: function(marker) {
+		// Check if marker was the last one in the line and if so set the labelCount back so
+		// the next new marker will have the next following character again.
+		if (LABELCHARS.indexOf(marker.mObject.label.text) == labelIndex - 1) {
+			labelIndex--;
+		};
+
+		marker.mObject.setMap(null);
+		model.markerArray.remove(marker);
+		marker.mObject = null;
+		model.activeMarker = null;
+	},
+
+	updateActiveMarker: function(marker) {
+		if (model.activeMarker != null && model.activeMarker != marker) {
+			// If there is actually a new marker that should be activated change icon and close info window on a previously active marker.
+			model.activeMarker.iWObject.close();
+			model.activeMarker.mObject.setIcon(view.greenIcon);
+			model.activeMarker.active(false);
+		}
+		// Set and activate the new marker
+		marker.active(true);
+		model.activeMarker = marker;
+		model.activeMarker.mObject.setIcon(view.orangeIcon);
+		model.activeMarker.iWObject.open(map,model.activeMarker.mObject);
+	},
+
 	// Edit the title of a marker
 	editMarker: function(marker) {
 		marker.editing(true);
@@ -167,7 +188,6 @@ var viewModel = {
 		// Therefore the untrimmed version is compared with a trimmed one to check whether anything changed.
 		if (title !== trimmedTitle) {
 			marker.title(trimmedTitle);
-			console.log("Yay if!");
 		}
 
 		if (!trimmedTitle) {
@@ -183,27 +203,6 @@ var viewModel = {
 	cancelEditing: function(marker) {
 		marker.editing(false);
 		marker.title(marker.previousTitle);
-	},
-
-	// Delete marker by removing it from the array and also removing it from the map.
-	deleteMarker: function(marker) {
-		marker.mObject.setMap(null);
-		model.markerArray.remove(marker);
-		marker.mObject = null;
-	},
-
-	updateActiveMarker: function(marker) {
-		if (model.activeMarker != null && model.activeMarker != marker) {
-			// If there is actually a new marker that should be activated change icon and close info window on a previously active marker.
-			model.activeMarker.iWObject.close();
-			model.activeMarker.mObject.setIcon(view.greenIcon);
-			model.activeMarker.active(false);
-		}
-		// Set and activate the new marker
-		marker.active(true);
-		model.activeMarker = marker;
-		model.activeMarker.mObject.setIcon(view.orangeIcon);
-		model.activeMarker.iWObject.open(map,model.activeMarker.mObject);
 	}
 };
 
