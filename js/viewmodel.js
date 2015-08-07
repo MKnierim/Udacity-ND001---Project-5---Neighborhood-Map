@@ -142,15 +142,15 @@ var ViewModel = function () {
 		//Associate the styled map with the MapTypeId.
 		map.mapTypes.set('udacity_style', styledMap);
 
-		// Initialize default markers.
-		for (var i=0; i < DEFAULTMARKERS.length; i++){
-			self.addMarker(new google.maps.LatLng(DEFAULTMARKERS[i].latitude, DEFAULTMARKERS[i].longitude), map, DEFAULTMARKERS[i].title);
-		};
-
 		// This event listener calls addMarker() when the map is clicked.
 		google.maps.event.addListener(map, 'click', function(event) {
 			self.addMarker(event.latLng, map, "Untitled Marker");
 		});
+
+		// Initialize default markers.
+		for (var i=0; i < DEFAULTMARKERS.length; i++){
+			self.addMarker(new google.maps.LatLng(DEFAULTMARKERS[i].latitude, DEFAULTMARKERS[i].longitude), map, DEFAULTMARKERS[i].title);
+		};
 	};
 
 	self.addMarker = function(location, map, title) {
@@ -188,9 +188,6 @@ var ViewModel = function () {
 			myMarker.active(false);
 			self.activeMarker = null;
 		});
-
-		// Activate new marker.
-		self.updateActiveMarker(myMarker);
 	};
 
 	// Delete marker by removing it from the array and also removing it from the map.
@@ -212,20 +209,27 @@ var ViewModel = function () {
 		marker.mObject = null;
 	};
 
-	self.updateActiveMarker = function(marker) {
-		// Check if there is currently a marker active and deactivate it.
-		if (self.activeMarker != null && self.activeMarker != marker) {
-			self.activeMarker.iWObject.close();
-			self.activeMarker.mObject.setIcon(view.greenIcon);
-			self.activeMarker.active(false);
-			self.activeMarker = null;
-		};
-
-		// Set and activate the new marker.
+	// Set and activate a new marker.
+	self.activateMarker = function(marker) {
 		marker.active(true);
 		self.activeMarker = marker;
 		self.activeMarker.mObject.setIcon(view.orangeIcon);
 		self.activeMarker.iWObject.open(map,self.activeMarker.mObject);
+	};
+
+	// Deactivate a previously active marker.
+	self.deactivateMarker = function(marker) {
+		marker.iWObject.close();
+		marker.mObject.setIcon(view.greenIcon);
+		marker.active(false);
+		self.activeMarker = null;
+	};
+
+	self.updateActiveMarker = function(marker) {
+		if (self.activeMarker) {
+			self.deactivateMarker(self.activeMarker);
+		}
+		self.activateMarker(marker);
 	};
 
 	// Edit the title of a marker.
