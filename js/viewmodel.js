@@ -6,25 +6,18 @@ var map;
 // Marker constants for the initialization of the map.
 var KARLSRUHE = new google.maps.LatLng(49.006616, 8.403354);
 var DEFAULTMARKERS = [
-	{title: "Karlsruhe Palace", latitude: 49.015677, longitude: 8.402064},
-	{title: "Field Hockey Club KTV", latitude: 49.026714, longitude: 8.408566},
-	{title: "Karlsruhe Institute of Technology", latitude: 49.011511, longitude: 8.415958}
+	{latitude: 49.015677, longitude: 8.402064},	// Karlsruhe Palace Gardens
+	{latitude: 49.026714, longitude: 8.408566},	// Field Hockey Club KTV
+	{latitude: 49.011511, longitude: 8.415958}	// Karlsruhe Institute of Technology
 ];
 
 // Constants and variables for the labels of map markers.
 var LABELCHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 var labelIndex = 0;
 
-// Constants for certain keyboard operations
+// Constants for certain keyboard operations.
 var ENTER_KEY = 13;
 var ESCAPE_KEY = 27;
-
-// API variables
-// var foursquareApi = 'https://api.foursquare.com/v2/venues/search?client_id=' +
-// 		'3P0CNNUW5YA1QIJAQUVRR0H4UI4FVASXURVLXGP4AOMAHXIM&client_secret=' +
-// 		'NJFWJLYRXMAHO2W2F1SIGOTA5LMHMSUTGLM2XBRAXV5YMUBM&v=20150401';
-// var googleStreetview = 'https://maps.googleapis.com/maps/api/streetview?size=' +
-// 		'300x150&location=';
 
 // A factory function to create binding handlers for specific keycodes.
 function keyhandlerBindingFactory(keyCode) {
@@ -149,7 +142,7 @@ var ViewModel = function () {
 
 		// Initialize default markers.
 		for (var i=0; i < DEFAULTMARKERS.length; i++){
-			self.addMarker(new google.maps.LatLng(DEFAULTMARKERS[i].latitude, DEFAULTMARKERS[i].longitude), map, DEFAULTMARKERS[i].title);
+			self.addMarker(new google.maps.LatLng(DEFAULTMARKERS[i].latitude, DEFAULTMARKERS[i].longitude), map, "Untitled Marker");
 		};
 	};
 
@@ -168,11 +161,14 @@ var ViewModel = function () {
 
 		// Create an info window for the marker.
 		var infoWindow = new google.maps.InfoWindow({
-			content: view.infoWindowTemplate(marker.title)
+			content: view.infoWindowEmpty(marker.title)
 		});
 
 		// Extend marker with additional (observable) parameters.
 		var myMarker = new MyMarker(marker, infoWindow);
+
+		// Call additional information on the marker through third-party APIs.
+		self.apiRequest(myMarker);
 
 		// Add marker to observable array
 		self.markerArray.push(myMarker);
@@ -266,41 +262,57 @@ var ViewModel = function () {
 		marker.title(marker.previousTitle);
 	};
 
-	// self.apiRequest = function(marker) {
-	// 	var lat = marker.position.lat();
-	// 	var lng = marker.position.lng();
+	// API requests for additional information to add to a marker.
+	self.apiRequest = function(marker) {
+		// API variables for additional marker information.
+		var fourSquareApi = 'https://api.foursquare.com/v2/venues/search' +
+		'?client_id=WV1KUOOG0RACYHRR2ZDQTQS1HY1GHKSAJ5WJT3CLGXYYAY0E' +
+		'&client_secret=JJWK2Y2KT1SOB3AASF3SW2TNCKROHSMOCXHEALYRP3LOOIRT' +
+		'&v=20150401&limit=1';
+		var googleStreetView = 'https://maps.googleapis.com/maps/api/streetview?size=300x150&location=';
+		var lat = marker.mObject.position.lat();
+		var lng = marker.mObject.position.lng();
 
-	// 	return 'latitude' + lat + '& longitude: ' + lng;
-	// 	// var $windowContent = $('#content');
+		// var $windowContent = $('#content');
 
-	// 	// var url = foursquareApi + '&ll=' + lat + ',' + lng + '&query=\'' +
-	// 	// 		marker.title + '\'&limit=1';
+		var url = fourSquareApi + '&ll=' + lat + ',' + lng;
 
-	// 	// $.getJSON(url, function(response) {
-	// 	// 		var venue = response.response.venues[0];
-	// 	// 		var venuePhone = venue.contact.formattedPhone;
-	// 	// 		var venueAddress = venue.location.formattedAddress;
-	// 	// 		var venueStreet = venue.location.address;
-	// 	// 		var venueCity = venue.location.city;
-	// 	// 		var venueCountry = venue.location.country;
-	// 	// 		var venueLocation = venueStreet + venueCity + venueCountry;
-	// 	// 		var streetPhotoUrl = googleStreetview + venueLocation;
+		// Issue the asynchronous request for third-party data on location.
+		$.getJSON(url, function(response) {
+				var venue = response.response.venues[0];
 
-	// 	// 		// Handles undefined error if phone number cannot be found
-	// 	// 		if (venuePhone === undefined) {
-	// 	// 				venuePhone = '<i>Could not find phone number for this location<i>';
-	// 	// 		} else {
-	// 	// 				venuePhone = venuePhone;
-	// 	// 		}
+				// Checks if a venue could be found through FourSquare API
+				if (venue) {
+					var venueAddress = '';
+					// For every entry in the formattedAddress Array construct a string to be displayed later.
+					for (var i = 0; i < venue.location.formattedAddress.length; i++) {
+						venueAddress += venue.location.formattedAddress[i] + '<br>';
+					};
+					var streetPhotoUrl = googleStreetView + lat + ',' + lng;
 
-	// 	// 		$windowContent.append('<p>' + venuePhone + '</p>');
-	// 	// 		$windowContent.append('<p>' + venueAddress + '</p>');
-	// 	// 		$windowContent.append('<img class="street-img" src="' + streetPhotoUrl +
-	// 	// 				'">');
-	// 	// }).error(function(err) {
-	// 	// 		$windowContent.text('No information can be retrieved at this time.');
-	// 	// });
-	// };
+					// If the request is run on an untitled marker, the marker title is updated automatically.
+					if (marker.title() == 'Untitled Marker'){
+						marker.title(venue.name);
+						marker.mObject.setTitle(marker.title());
+					}
+
+					marker.iWObject.setContent(view.infoWindowTemplate(marker.title(),
+						venueAddress,
+						streetPhotoUrl));
+				}
+				else {
+					marker.iWObject.setContent(view.infoWindowEmpty(marker.title()));
+				}
+
+				// $windowContent.append('<p>' + venuePhone + '</p>');
+				// $windowContent.append('<p>' + venueAddress + '</p>');
+				// $windowContent.append('<img class="street-img" src="' + streetPhotoUrl +
+				// 		'">');
+		}).error(function(err) {
+				console.log('No information can be retrieved at this time.');
+				// $windowContent.text('No information can be retrieved at this time.');
+		});
+	};
 };
 
 // Initialize the map after the DOM has finished loading.

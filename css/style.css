@@ -24,6 +24,14 @@ h3 {
 	padding-right: 5px;
 }
 
+.iw-container {
+	max-width: 200px;
+}
+
+.iw-img {
+	width: 100%;
+}
+
 #map-canvas {
 	height: 100%;
 	margin: 0;
@@ -137,4 +145,8 @@ h3 {
 
 #marker-list li.editing:last-child {
 	margin-bottom: -1px;
+}
+
+#marker-title {
+	margin-right: 50px;
 }

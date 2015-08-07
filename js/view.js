@@ -1,10 +1,23 @@
 var view = {
 	// Specifies a template for marker Info Windows.
-	infoWindowTemplate : function(title) {
-		var htmlstring = '<div>' +
+	infoWindowTemplate : function(title, fourSquareContent, streetViewContent) {
+		var htmlstring = '<div class="iw-container">' +
 			'<h3>' + title + '</h3>' +
 			'<hr>' +
-			'<div><small>Additional content...</small></div>' +
+			'<div><small>' + fourSquareContent + '</small></div>' +
+			'<hr>' +
+			'<div><img class="iw-img" src="' + streetViewContent + '"></div>' +
+			'</div>';
+		return htmlstring;
+	},
+
+	infoWindowEmpty : function(title) {
+		var htmlstring = '<div class="iw-container">' +
+			'<h3>' + title + '</h3>' +
+			'<hr>' +
+			'<div><small>No additional information was found on FourSqaure</small></div>' +
+			'<hr>' +
+			'<div><small>No image was found for this location on GoogleStreetView</small></div>' +
 			'</div>';
 		return htmlstring;
 	},
