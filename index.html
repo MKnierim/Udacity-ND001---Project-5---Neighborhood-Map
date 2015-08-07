@@ -8,15 +8,20 @@
 </head>
 <body>
 
-	<!-- Container for the map element -->
-	<div id="map-canvas"></div>
-
 	<!-- Custom controls -->
-	<div id="custom-control">
+	<div id="custom-control" class="mobile-list">
 		<div class="control-outer">
 			<div class="control-inner">
-				<h3>Marker List</h3>
+				<!-- Control for mobile version of marker list -->
+				<div class="menu-btn" id="menu-btn">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<h3>My Marker List</h3>
+			</div>
 
+			<div class="control-inner responsive-menu">
 				<!-- Control to search/filter existing markers -->
 				<input id="searchbar" placeholder="Filter markers" data-bind="value: searchFilter, valueUpdate: 'keyup'">
 
@@ -24,8 +29,10 @@
 				<ul id="marker-list" data-bind="foreach: filteredMarkers">
 					<li data-bind="css: { editing: editing }">
 						<div class="view">
-							<div id="marker-title" data-bind="click: $root.updateActiveMarker, css: { active: active }">
-								<span data-bind="text: mObject.label.text"></span> - <span data-bind="text: title"></span>
+							<div data-bind="click: $root.updateActiveMarker, css: { active: active }">
+								<div class="marker-label" data-bind="text: mObject.label.text"></div>
+								<div class="marker-title" data-bind="text: title, click: $root.updateActiveMarker">
+							</div>
 							</div>
 							<button class="edit-btn" data-bind="click: $root.editMarker"></button>
 							<button class="del-btn" data-bind="click: $root.deleteMarker"></button>
@@ -37,6 +44,9 @@
 
 		</div>
 	</div>
+
+	<!-- Container for the map element -->
+	<div id="map-canvas"></div>
 
 	<!-- Load scripts and libraries. First libraries and helpers, than the Google Maps API and lastly the app execution scripts. -->
 	<script type="text/javascript" src="js/libs/jquery-1.11.3.js"></script>

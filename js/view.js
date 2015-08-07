@@ -22,6 +22,15 @@ var view = {
 		return htmlstring;
 	},
 
+	infoWindowError : function(title) {
+		var htmlstring = '<div class="iw-container">' +
+			'<h3>' + title + '</h3>' +
+			'<hr>' +
+			'<div><small>No information can be retrieved at this time.</small></div>' +
+			'</div>';
+		return htmlstring;
+	},
+
 	customLabel : function(labelChar) {
 		var labelObject = {
 			color: '#fff',

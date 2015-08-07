@@ -6,9 +6,11 @@ var map;
 // Marker constants for the initialization of the map.
 var KARLSRUHE = new google.maps.LatLng(49.006616, 8.403354);
 var DEFAULTMARKERS = [
-	{latitude: 49.015677, longitude: 8.402064},	// Karlsruhe Palace Gardens
+	{latitude: 49.016666, longitude: 8.404958},	// Karlsruhe Palace Gardens
 	{latitude: 49.026714, longitude: 8.408566},	// Field Hockey Club KTV
-	{latitude: 49.011511, longitude: 8.415958}	// Karlsruhe Institute of Technology
+	{latitude: 49.010032, longitude: 8.411216},	// Karlsruhe Institute of Technology
+	{latitude: 49.008039, longitude: 8.399974},	// Friedrichsplatz
+	{latitude: 49.009520, longitude: 8.403937}	// Market place
 ];
 
 // Constants and variables for the labels of map markers.
@@ -121,7 +123,7 @@ var ViewModel = function () {
 
 		var mapOptions = {
 			center: KARLSRUHE,
-			zoom: 14,
+			zoom: 15,
 			disableDefaultUI: true,
 			mapTypeControl: true,
 			mapTypeControlOptions: {
@@ -266,15 +268,12 @@ var ViewModel = function () {
 	self.apiRequest = function(marker) {
 		// API variables for additional marker information.
 		var fourSquareApi = 'https://api.foursquare.com/v2/venues/search' +
-		'?client_id=WV1KUOOG0RACYHRR2ZDQTQS1HY1GHKSAJ5WJT3CLGXYYAY0E' +
-		'&client_secret=JJWK2Y2KT1SOB3AASF3SW2TNCKROHSMOCXHEALYRP3LOOIRT' +
-		'&v=20150401&limit=1';
+												'?client_id=WV1KUOOG0RACYHRR2ZDQTQS1HY1GHKSAJ5WJT3CLGXYYAY0E' +
+												'&client_secret=JJWK2Y2KT1SOB3AASF3SW2TNCKROHSMOCXHEALYRP3LOOIRT' +
+												'&v=20150401&limit=1';
 		var googleStreetView = 'https://maps.googleapis.com/maps/api/streetview?size=300x150&location=';
 		var lat = marker.mObject.position.lat();
 		var lng = marker.mObject.position.lng();
-
-		// var $windowContent = $('#content');
-
 		var url = fourSquareApi + '&ll=' + lat + ',' + lng;
 
 		// Issue the asynchronous request for third-party data on location.
@@ -283,11 +282,13 @@ var ViewModel = function () {
 
 				// Checks if a venue could be found through FourSquare API
 				if (venue) {
-					var venueAddress = '';
 					// For every entry in the formattedAddress Array construct a string to be displayed later.
+					var venueAddress = '';
 					for (var i = 0; i < venue.location.formattedAddress.length; i++) {
 						venueAddress += venue.location.formattedAddress[i] + '<br>';
 					};
+
+					// Construct and issue the GoogleStreetView image request.
 					var streetPhotoUrl = googleStreetView + lat + ',' + lng;
 
 					// If the request is run on an untitled marker, the marker title is updated automatically.
@@ -296,21 +297,19 @@ var ViewModel = function () {
 						marker.mObject.setTitle(marker.title());
 					}
 
+					// Pass the new additonal marker information to the infoWindow object.
 					marker.iWObject.setContent(view.infoWindowTemplate(marker.title(),
 						venueAddress,
 						streetPhotoUrl));
 				}
 				else {
+					// If no venue is returned by the FourSquareRequest the infoWindow object is updated accordingly.
 					marker.iWObject.setContent(view.infoWindowEmpty(marker.title()));
 				}
 
-				// $windowContent.append('<p>' + venuePhone + '</p>');
-				// $windowContent.append('<p>' + venueAddress + '</p>');
-				// $windowContent.append('<img class="street-img" src="' + streetPhotoUrl +
-				// 		'">');
 		}).error(function(err) {
-				console.log('No information can be retrieved at this time.');
-				// $windowContent.text('No information can be retrieved at this time.');
+				// If the request returns an error the infoWindow object is updated accordingly.
+				marker.iWObject.setContent(view.infoWindowError(marker.title()));
 		});
 	};
 };
@@ -325,4 +324,9 @@ $(function() {
 
 	// Initialize the map
 	viewModel.initializeMap();
+
+	// Create event listener for menu (for mobile users).
+	$( '.menu-btn' ).click(function(){
+  	$('.responsive-menu').toggleClass('expand')
+  });
 });
