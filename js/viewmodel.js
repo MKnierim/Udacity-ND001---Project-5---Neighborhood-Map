@@ -61,7 +61,7 @@ var ViewModel = function () {
 					var venueAddress = '';
 					for (var i = 0; i < venue.location.formattedAddress.length; i++) {
 						venueAddress += venue.location.formattedAddress[i] + '<br>';
-					};
+					}
 
 					// Construct and issue the GoogleStreetView image request.
 					var streetPhotoUrl = googleStreetView + lat + ',' + lng;
@@ -119,7 +119,7 @@ var ViewModel = function () {
 		// Initialize default markers.
 		for (var i=0; i < DEFAULTMARKERS.length; i++){
 			self.addMarker(new google.maps.LatLng(DEFAULTMARKERS[i].latitude, DEFAULTMARKERS[i].longitude), map, "Untitled Marker");
-		};
+		}
 	};
 
 	self.addMarker = function(location, map, title) {
@@ -168,12 +168,12 @@ var ViewModel = function () {
 		// the next new marker will have the next following character again.
 		if (LABELCHARS.indexOf(marker.mObject.label.text) == labelIndex - 1) {
 			labelIndex--;
-		};
+		}
 
 		// Check if the marker to delete is the currently active marker and if so set the activeMarker to null.
 		if (self.activeMarker == marker) {
 			self.activeMarker = null;
-		};
+		}
 
 		// Then delete the chosen marker.
 		marker.mObject.setMap(null);
@@ -211,7 +211,7 @@ var ViewModel = function () {
 			self.markerArray().forEach(function(element, index, array) {
 				element.mObject.setMap(null);
 			});
-		};
+		}
 
 		// Then pass the map to all markers which should be displayed.
 		markers.forEach(function(element, index, array) {
@@ -241,7 +241,7 @@ var ViewModel = function () {
 
 			self.showMarkers(markerSet);
 			return markerSet;
-		};
+		}
 	}, self);
 
 };
@@ -249,7 +249,7 @@ var ViewModel = function () {
 // Initialize the map after the DOM has finished loading.
 $(function() {
 	// Bind a new instance of the view model to the page.
-	var viewModel = new ViewModel;
+	var viewModel = new ViewModel();
 
 	// Activate Knockout bindings.
 	ko.applyBindings(viewModel);
@@ -259,6 +259,6 @@ $(function() {
 
 	// Create event listener for menu (for mobile users).
 	$( '.menu-btn' ).click(function(){
-		$('.responsive-menu').toggleClass('expand')
+		$('.responsive-menu').toggleClass('expand');
 	});
 });
