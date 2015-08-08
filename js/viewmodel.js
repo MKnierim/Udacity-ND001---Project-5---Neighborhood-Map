@@ -34,31 +34,59 @@ var ViewModel = function () {
 	self.markerArray = ko.observableArray();
 
 	// Stores an object of type marker which is currently being focused.
-	self.activeMarker = null;		// Should I make this an observable?
+	self.activeMarker = null;
 
 	// Stores a string which is used to filter markers in the list.
 	self.searchFilter = ko.observable('');
 
-	// This function checks to see if there is anything to be filtered.
-	// If there's nothing to be filtered, display the entire item list and all the markers.
-	self.filteredMarkers = ko.computed(function () {
-		// Convert search string to lower case to bypass case-sensitive matching.
-		var filter = self.searchFilter().toLowerCase();
+	// API requests for additional information to add to a marker.
+	self.apiRequest = function(marker) {
+		// API variables for additional marker information.
+		var fourSquareApi = 'https://api.foursquare.com/v2/venues/search' +
+												'?client_id=WV1KUOOG0RACYHRR2ZDQTQS1HY1GHKSAJ5WJT3CLGXYYAY0E' +
+												'&client_secret=JJWK2Y2KT1SOB3AASF3SW2TNCKROHSMOCXHEALYRP3LOOIRT' +
+												'&v=20150401&limit=1';
+		var googleStreetView = 'https://maps.googleapis.com/maps/api/streetview?size=300x150&location=';
+		var lat = marker.mObject.position.lat();
+		var lng = marker.mObject.position.lng();
+		var url = fourSquareApi + '&ll=' + lat + ',' + lng;
 
-		// Use Knockout's arrayFilter utility function to pass in the markerArray and
-		// control which items are filtered based on a match of the search string and the
-		// marker title. For additional information see:
-		// http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
-		if (!filter) {
-			return self.markerArray();
-		}
-		else {
-			return ko.utils.arrayFilter(self.markerArray(), function(marker) {
-	        return marker.mObject.title.toLowerCase().indexOf(filter) !== -1;
-	    });
-		};
-	}, self);
+		// Issue the asynchronous request for third-party data on location.
+		$.getJSON(url, function(response) {
+				var venue = response.response.venues[0];
 
+				// Checks if a venue could be found through FourSquare API
+				if (venue) {
+					// For every entry in the formattedAddress Array construct a string to be displayed later.
+					var venueAddress = '';
+					for (var i = 0; i < venue.location.formattedAddress.length; i++) {
+						venueAddress += venue.location.formattedAddress[i] + '<br>';
+					};
+
+					// Construct and issue the GoogleStreetView image request.
+					var streetPhotoUrl = googleStreetView + lat + ',' + lng;
+
+					// If the request is run on an untitled marker, the marker title is updated automatically.
+					if (marker.title() == 'Untitled Marker'){
+						marker.title(venue.name);
+						marker.mObject.setTitle(marker.title());
+					}
+
+					// Pass the new additonal marker information to the infoWindow object.
+					marker.iWObject.setContent(view.infoWindowTemplate(marker.title(),
+						venueAddress,
+						streetPhotoUrl));
+				}
+				else {
+					// If no venue is returned by the FourSquareRequest the infoWindow object is updated accordingly.
+					marker.iWObject.setContent(view.infoWindowEmpty(marker.title()));
+				}
+
+		}).error(function(err) {
+				// If the request returns an error the infoWindow object is updated accordingly.
+				marker.iWObject.setContent(view.infoWindowError(marker.title()));
+		});
+	};
 
 	// Function to intialize the map at the beginning.
 	self.initializeMap = function() {
@@ -69,7 +97,7 @@ var ViewModel = function () {
 
 		var mapOptions = {
 			center: KARLSRUHE,
-			zoom: 15,
+			zoom: 14,
 			disableDefaultUI: true,
 			mapTypeControl: true,
 			mapTypeControlOptions: {
@@ -176,54 +204,46 @@ var ViewModel = function () {
 		self.activateMarker(marker);
 	};
 
-	// API requests for additional information to add to a marker.
-	self.apiRequest = function(marker) {
-		// API variables for additional marker information.
-		var fourSquareApi = 'https://api.foursquare.com/v2/venues/search' +
-												'?client_id=WV1KUOOG0RACYHRR2ZDQTQS1HY1GHKSAJ5WJT3CLGXYYAY0E' +
-												'&client_secret=JJWK2Y2KT1SOB3AASF3SW2TNCKROHSMOCXHEALYRP3LOOIRT' +
-												'&v=20150401&limit=1';
-		var googleStreetView = 'https://maps.googleapis.com/maps/api/streetview?size=300x150&location=';
-		var lat = marker.mObject.position.lat();
-		var lng = marker.mObject.position.lng();
-		var url = fourSquareApi + '&ll=' + lat + ',' + lng;
+	self.showMarkers = function(markers) {
+		// First deactivate all markers if a filter is applied
+		// (i.e. the passed array is not the full markerArray).
+		if (markers !== self.markerArray()) {
+			self.markerArray().forEach(function(element, index, array) {
+				element.mObject.setMap(null);
+			});
+		};
 
-		// Issue the asynchronous request for third-party data on location.
-		$.getJSON(url, function(response) {
-				var venue = response.response.venues[0];
-
-				// Checks if a venue could be found through FourSquare API
-				if (venue) {
-					// For every entry in the formattedAddress Array construct a string to be displayed later.
-					var venueAddress = '';
-					for (var i = 0; i < venue.location.formattedAddress.length; i++) {
-						venueAddress += venue.location.formattedAddress[i] + '<br>';
-					};
-
-					// Construct and issue the GoogleStreetView image request.
-					var streetPhotoUrl = googleStreetView + lat + ',' + lng;
-
-					// If the request is run on an untitled marker, the marker title is updated automatically.
-					if (marker.title() == 'Untitled Marker'){
-						marker.title(venue.name);
-						marker.mObject.setTitle(marker.title());
-					}
-
-					// Pass the new additonal marker information to the infoWindow object.
-					marker.iWObject.setContent(view.infoWindowTemplate(marker.title(),
-						venueAddress,
-						streetPhotoUrl));
-				}
-				else {
-					// If no venue is returned by the FourSquareRequest the infoWindow object is updated accordingly.
-					marker.iWObject.setContent(view.infoWindowEmpty(marker.title()));
-				}
-
-		}).error(function(err) {
-				// If the request returns an error the infoWindow object is updated accordingly.
-				marker.iWObject.setContent(view.infoWindowError(marker.title()));
+		// Then pass the map to all markers which should be displayed.
+		markers.forEach(function(element, index, array) {
+			element.mObject.setMap(map);
 		});
 	};
+
+	// This function checks to see if there is anything to be filtered.
+	// If there's nothing to be filtered, display the entire item list and all the markers.
+	self.filteredMarkers = ko.computed(function () {
+		// Convert search string to lower case to bypass case-sensitive matching.
+		var filter = self.searchFilter().toLowerCase();
+
+		// Use Knockout's arrayFilter utility function to pass in the markerArray and
+		// control which items are filtered based on a match of the search string and the
+		// marker title. For additional information see:
+		// http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+		if (!filter) {
+			// // If no filter is set, show all the markers by passing the markerArray with all markers.
+			self.showMarkers(self.markerArray());
+			return self.markerArray();
+		}
+		else {
+			var markerSet = ko.utils.arrayFilter(self.markerArray(), function(marker) {
+					return marker.mObject.title.toLowerCase().indexOf(filter) !== -1;
+			});
+
+			self.showMarkers(markerSet);
+			return markerSet;
+		};
+	}, self);
+
 };
 
 // Initialize the map after the DOM has finished loading.
@@ -239,6 +259,6 @@ $(function() {
 
 	// Create event listener for menu (for mobile users).
 	$( '.menu-btn' ).click(function(){
-  	$('.responsive-menu').toggleClass('expand')
-  });
+		$('.responsive-menu').toggleClass('expand')
+	});
 });
