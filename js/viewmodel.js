@@ -17,65 +17,11 @@ var DEFAULTMARKERS = [
 var LABELCHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 var labelIndex = 0;
 
-// Constants for certain keyboard operations.
-var ENTER_KEY = 13;
-var ESCAPE_KEY = 27;
-
-// A factory function to create binding handlers for specific keycodes.
-function keyhandlerBindingFactory(keyCode) {
-	return {
-		init: function (element, valueAccessor, allBindingsAccessor, data, bindingContext) {
-			var wrappedHandler, newValueAccessor;
-
-			// Wrap the handler with a check for the enter key.
-			wrappedHandler = function (data, event) {
-				if (event.keyCode === keyCode) {
-					valueAccessor().call(this, data, event);
-				}
-			};
-
-			// Create a valueAccessor with the options that we would want to pass to the event binding.
-			newValueAccessor = function () {
-				return {
-					keyup: wrappedHandler
-				};
-			};
-
-			// Call the real event binding's init function.
-			ko.bindingHandlers.event.init(element, newValueAccessor, allBindingsAccessor, data, bindingContext);
-		}
-	};
-}
-
-// A custom binding to handle the enter key.
-ko.bindingHandlers.enterKey = keyhandlerBindingFactory(ENTER_KEY);
-
-// Another custom binding, this time to handle the escape key.
-ko.bindingHandlers.escapeKey = keyhandlerBindingFactory(ESCAPE_KEY);
-
-// Wrapper to hasFocus that also selects text and applies focus async.
-ko.bindingHandlers.selectAndFocus = {
-	init: function (element, valueAccessor, allBindingsAccessor, bindingContext) {
-		ko.bindingHandlers.hasFocus.init(element, valueAccessor, allBindingsAccessor, bindingContext);
-		ko.utils.registerEventHandler(element, 'focus', function () {
-			element.focus();
-		});
-	},
-	update: function (element, valueAccessor) {
-		ko.utils.unwrapObservable(valueAccessor()); // For dependency
-		// ensure that element is visible before trying to focus.
-		setTimeout(function () {
-			ko.bindingHandlers.hasFocus.update(element, valueAccessor);
-		}, 0);
-	}
-};
-
 // Create a marker object as a child of the Google Maps marker object. This way aditional attributes of a marker can be specified.
 var MyMarker = function (markerObject, infoWindowObject) {
 	this.mObject = markerObject;
 	this.iWObject = infoWindowObject;
 	this.title = ko.observable(markerObject.title);
-	this.editing = ko.observable(false);
 	this.active = ko.observable(false);
 };
 
@@ -228,40 +174,6 @@ var ViewModel = function () {
 			self.deactivateMarker(self.activeMarker);
 		}
 		self.activateMarker(marker);
-	};
-
-	// Edit the title of a marker.
-	self.editMarker = function(marker) {
-		marker.editing(true);
-		marker.previousTitle = marker.title();
-	};
-
-	// Stop editing an item and save the new title. If the title is empty set it to "Untitled Marker".
-	self.saveEditing = function(marker) {
-		marker.editing(false);
-
-		var title = marker.title();
-		var trimmedTitle = title.trim();
-
-		// Observable value changes are not triggered if they're consisting of whitespaces only.
-		// Therefore the untrimmed version is compared with a trimmed one to check whether anything changed.
-		if (title !== trimmedTitle) {
-			marker.title(trimmedTitle);
-		}
-
-		if (!trimmedTitle) {
-			marker.title("Untitled Marker");
-		}
-
-		// In the end, change the title on the GoogleMaps Marker Object manually.
-		marker.mObject.setTitle(marker.title());
-		marker.iWObject.setContent(view.infoWindowTemplate(marker.title()));
-	};
-
-	// Cancel editing an item and revert to the previous content.
-	self.cancelEditing = function(marker) {
-		marker.editing(false);
-		marker.title(marker.previousTitle);
 	};
 
 	// API requests for additional information to add to a marker.

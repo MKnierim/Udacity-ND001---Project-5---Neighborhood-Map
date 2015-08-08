@@ -55,7 +55,7 @@ h3 {
 
 .marker-title {
 	margin-left: 16px;
-	margin-right: 48px;
+	margin-right: 28px;
 	padding-left: 8px;
 	border-left: 1px dotted #ccc;
 }
@@ -122,25 +122,10 @@ h3 {
 	font-weight: bold;
 }
 
-#marker-list li.editing {
-	border-bottom: none;
-	padding: 0;
-}
-
-#marker-list li.editing .edit {
-	display: block;
-	width: 100%;
-/*	padding: 13px 17px 12px 17px;*/
-}
-
-#marker-list li.editing .view {
-	display: none;
-}
-
-#marker-list li .del-btn,
-#marker-list li .edit-btn {
+#marker-list li .del-btn {
 	top: 0;
 	bottom: 0;
+	right: 0px;
 	margin: auto;
 	position: absolute;
 	width: 20px;
@@ -151,16 +136,7 @@ h3 {
 	background-color: #fff;
 }
 
-#marker-list li .del-btn {
-	right: 0px;
-}
-
-#marker-list li .edit-btn {
-	right: 20px;
-}
-
-#marker-list li .del-btn:hover,
-#marker-list li .edit-btn:hover {
+#marker-list li .del-btn:hover {
 	text-shadow: 0 0 1px #000,
 				 0 0 10px rgba(199, 107, 107, 0.8);
 }
@@ -169,29 +145,12 @@ h3 {
 	content: '✖';
 }
 
-#marker-list li .edit-btn:after {
-	content: '✎';
-}
-
 #marker-list li:hover {
 	cursor: pointer;
 	font-weight: bold;
 }
 
-#marker-list li:hover .del-btn,
-#marker-list li:hover .edit-btn {
-	/*display: block;*/
-}
-
-#marker-list li .edit {
-	display: none;
-}
-
-#marker-list li.editing:last-child {
-	margin-bottom: -1px;
-}
-
-@media screen and (max-width: 400px) and (orientation: portrait) {
+@media screen and (max-width: 430px) and (orientation: portrait) {
 	#custom-control {
 		position: absolute;
 		left: auto;
