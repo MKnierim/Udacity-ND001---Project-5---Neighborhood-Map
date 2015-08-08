@@ -1,5 +1,5 @@
 var view = {
-	// Specifies a template for marker Info Windows.
+	// Several templates for marker info windows.
 	infoWindowTemplate : function(title, fourSquareContent, streetViewContent) {
 		var htmlstring = '<div class="iw-container">' +
 			'<h3>' + title + '</h3>' +
@@ -31,6 +31,7 @@ var view = {
 		return htmlstring;
 	},
 
+	// Template for marker label
 	customLabel : function(labelChar) {
 		var labelObject = {
 			color: '#fff',
@@ -40,7 +41,7 @@ var view = {
 		return labelObject;
 	},
 
-	// Specifies a custom designed icon for the map.
+	// A custom designed icon for the map in two colors to show activation state.
 	greenIcon : {
 		url: 'imgs/icons/marker-green.png',
 		labelOrigin: new google.maps.Point(12, 12)
@@ -51,7 +52,8 @@ var view = {
 		labelOrigin: new google.maps.Point(12, 12)
 	},
 
-	// Create an array of styles for the fun map type. Created by using the offered wizard at: http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html
+	// An array of styles for the fun map type. Created by using the offered wizard:
+	// http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html
 	udacityMapStyle : [
 		{
 			"featureType": "administrative",
